@@ -1,3 +1,3 @@
-import CreateCategoryModal from "./CreateCategory";
+import BaseModal from "./BaseModal";
 
-export { CreateCategoryModal };
+export { BaseModal };
