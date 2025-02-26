@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { AddButton } from "@/components/button";
+import { toast } from "sonner";
 
 export default function CreateCategoryModal() {
   const [category, setCategory] = useState("");
@@ -17,12 +18,16 @@ export default function CreateCategoryModal() {
     setEmoji(imageUrl);
   };
 
-  const handleRemoveEmoji = () => setEmoji("");
-
   const handleCreateCategory = () => {
     addCategory({ id: uuidv4(), name: category, emoji });
     setCategory("");
-    handleRemoveEmoji();
+    setEmoji("");
+    toast(`Category ${category} has been created!`, {
+      action: {
+        label: "Undo",
+        onClick: () => console.log("Undo"),
+      },
+    });
   };
 
   const isEmoji = emoji && !!emoji.length;
@@ -53,7 +58,7 @@ export default function CreateCategoryModal() {
             Emoji <span className="text-xs text-slate-500">(optional)</span>
           </Label>
           {isEmoji ? (
-            <img src={emoji} className="size-12" onDoubleClick={handleRemoveEmoji} />
+            <img src={emoji} className="size-12" onDoubleClick={() => setEmoji("")} />
           ) : (
             <EmojiPicker onEmojiClick={handleEmojiPick} lazyLoadEmojis searchDisabled />
           )}

@@ -1,4 +1,4 @@
-import CategoryPage from "./Category";
-import ItemPage from "./Item";
+import CategoryPage from "./category";
+import ItemPage from "./item";
 
 export { CategoryPage, ItemPage };

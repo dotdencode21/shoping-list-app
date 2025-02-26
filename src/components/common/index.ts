@@ -1,5 +1,6 @@
 import Heading from "./Heading";
 import Spinner from "./Spinner";
-import ActionDropdown from "./ActionDropdown";
+import Dropdown from "./Dropdown";
+import SearchInput from "./SearchInput";
 
-export { Heading, Spinner, ActionDropdown };
+export { Heading, Spinner, Dropdown, SearchInput };

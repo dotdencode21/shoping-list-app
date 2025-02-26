@@ -8,11 +8,11 @@ import { Category } from "@/types/category";
 import { EditButton } from "@/components/button";
 
 interface EditCategoryModalProps {
-  value: Category;
+  data: Category;
 }
 
-export default function EditCategoryModal({ value }: EditCategoryModalProps) {
-  const { id: categoryId, name, emoji: categoryEmoji } = value;
+export default function EditCategoryModal({ data }: EditCategoryModalProps) {
+  const { id: categoryId, name, emoji: categoryEmoji } = data;
 
   const [category, setCategory] = useState(name);
   const [emoji, setEmoji] = useState(categoryEmoji);
@@ -26,7 +26,7 @@ export default function EditCategoryModal({ value }: EditCategoryModalProps) {
   const handleRemoveEmoji = () => setEmoji("");
 
   const handleUpdateCategory = () => {
-    editCategory(categoryId, { ...value, name: category, emoji });
+    editCategory(categoryId, { ...data, name: category, emoji });
   };
 
   const isEmoji = emoji && !!emoji.length;

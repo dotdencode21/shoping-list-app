@@ -1,6 +1,6 @@
 export default function Spinner() {
   return (
-    <div className="flex h-dvh w-full items-center justify-center">
+    <div className="flex min-h-[20rem] w-full items-center justify-center">
       <svg
         className="size-16 animate-spin text-neutral-100"
         viewBox="0 0 64 64"

@@ -1,3 +1,5 @@
 import CreateCategoryModal from "./Create";
+import EditCategoryModal from "./Edit";
+import RemoveCategoryModal from "./Remove";
 
-export { CreateCategoryModal };
+export { CreateCategoryModal, EditCategoryModal, RemoveCategoryModal };

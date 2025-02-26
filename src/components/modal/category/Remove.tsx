@@ -4,11 +4,11 @@ import { RemoveButton } from "@/components/button";
 import { Category } from "@/types/category";
 
 interface RemoveCategoryModalProps {
-  value: Category;
+  data: Category;
 }
 
-export default function RemoveCategoryModal({ value }: RemoveCategoryModalProps) {
-  const { id: categoryId, name } = value;
+export default function RemoveCategoryModal({ data }: RemoveCategoryModalProps) {
+  const { id: categoryId, name } = data;
 
   const { removeCategory } = useCategoryStore();
 
@@ -24,7 +24,7 @@ export default function RemoveCategoryModal({ value }: RemoveCategoryModalProps)
       modalTrigger={<RemoveButton title="Remove" />}
     >
       <span className="text-slate-600">
-        Are you really want to remove <span className="font-semibold text-slate-700">{name}</span> category?
+        Do you really want to remove <span className="font-semibold text-slate-700">{name}</span> category?
       </span>
     </BaseModal>
   );

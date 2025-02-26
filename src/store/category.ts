@@ -8,9 +8,9 @@ const CATEGORY_KEY = "categories";
 interface CategoryStore extends BaseStoreState {
   categories: Category[];
 
-  addCategory: (payload: Category) => Promise<void>;
-  editCategory: (categoryId: string, payload: Partial<Category>) => Promise<void>;
-  removeCategory: (categoryId: string) => Promise<void>;
+  addCategory: (payload: Category) => void;
+  editCategory: (categoryId: string, payload: Partial<Category>) => void;
+  removeCategory: (categoryId: string) => void;
 }
 
 export const useCategoryStore = create<CategoryStore>()((set, get) => ({
@@ -21,37 +21,52 @@ export const useCategoryStore = create<CategoryStore>()((set, get) => ({
     localStorage.setItem(CATEGORY_KEY, JSON.stringify(get().categories));
   },
 
-  async addCategory(payload) {
+  async triggerLoading() {
     set({ isLoading: true });
     await delay();
     set({ isLoading: false });
-
-    set({ categories: [...get().categories, payload] });
-
-    get().saveToLocalStorage();
   },
 
-  async editCategory(categoryId, payload) {
-    set({ isLoading: true });
-    await delay();
-    set({ isLoading: false });
+  addCategory(payload) {
+    try {
+      get().triggerLoading();
 
-    set({
-      categories: get().categories.map((category) =>
-        category.id === categoryId ? { ...category, ...payload } : category,
-      ),
-    });
+      set({ categories: [...get().categories, payload] });
 
-    get().saveToLocalStorage();
+      get().saveToLocalStorage();
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   },
 
-  async removeCategory(categoryId) {
-    set({ isLoading: true });
-    await delay();
-    set({ isLoading: false });
+  editCategory(categoryId, payload) {
+    try {
+      get().triggerLoading();
 
-    set({ categories: get().categories.filter((category) => category.id !== categoryId) });
+      set({
+        categories: get().categories.map((category) =>
+          category.id === categoryId ? { ...category, ...payload } : category,
+        ),
+      });
 
-    get().saveToLocalStorage();
+      get().saveToLocalStorage();
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
+
+  removeCategory(categoryId) {
+    try {
+      get().triggerLoading();
+
+      set({ categories: get().categories.filter((category) => category.id !== categoryId) });
+
+      get().saveToLocalStorage();
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   },
 }));
