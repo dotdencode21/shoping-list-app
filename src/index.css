@@ -116,15 +116,6 @@
 
 @layer base {
   body {
-    @apply bg-zinc-100;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+    @apply bg-sky-950;
   }
 }
