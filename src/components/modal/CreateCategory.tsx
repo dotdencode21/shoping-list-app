@@ -13,19 +13,25 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { useState } from "react";
+import { useCategoryStore } from "@/store/category";
+import { v4 as uuidv4 } from "uuid";
 
 export default function CreateCategoryModal() {
   const [category, setCategory] = useState("");
-  const [emoji, setEmoji] = useState<string | null>(null);
+  const [emoji, setEmoji] = useState<string>("");
+
+  const { addCategory } = useCategoryStore();
 
   const handleEmojiPick = ({ imageUrl }: EmojiClickData) => {
     setEmoji(imageUrl);
   };
 
-  const handleRemoveEmoji = () => setEmoji(null);
+  const handleRemoveEmoji = () => setEmoji("");
 
   const handleCreateCategory = () => {
-    console.log("aaa");
+    addCategory({ id: uuidv4(), name: category, emoji });
+    setCategory("");
+    handleRemoveEmoji();
   };
 
   const isEmoji = emoji && !!emoji.length;
