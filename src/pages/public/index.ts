@@ -1,4 +1,3 @@
-import CategoryPage from "./category";
-import ItemPage from "./item";
+import ShoppingListItemPage from "./shoppingList";
 
-export { CategoryPage, ItemPage };
+export { ShoppingListItemPage };

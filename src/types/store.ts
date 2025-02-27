@@ -1,6 +1,6 @@
 export interface BaseStoreState {
   isLoading: boolean;
 
-  saveToLocalStorage?: (key?: string, value?: unknown) => void;
+  saveToLocalStorage?: () => void;
   triggerLoading: () => Promise<void>;
 }

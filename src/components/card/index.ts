@@ -1,3 +1,3 @@
-import CategoryCard from "./Category";
+import ShoppingListItemCard from "./ShoppingListItem";
 
-export { CategoryCard };
+export { ShoppingListItemCard };

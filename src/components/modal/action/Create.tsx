@@ -1,69 +1,77 @@
-import { useCategoryStore } from "@/store/category";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import BaseModal from "../BaseModal";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { AddButton } from "@/components/button";
-import { useItemStore } from "@/store/item";
+import { useShoppingListStore } from "@/store/shoppingList";
 
-export default function CreateItemModal() {
-  const [item, setItem] = useState("");
-  const [quantity, setQuantity] = useState("");
+const DEFAULT_STATE = {
+  name: "",
+  category: "",
+  quantity: 0,
+};
+
+export default function CreateModal() {
+  const [values, setValues] = useState(DEFAULT_STATE);
   const [emoji, setEmoji] = useState("");
 
-  const { currentCategory, updateCurrentCategory } = useCategoryStore();
-  const { items, createItem } = useItemStore();
+  const { createItem } = useShoppingListStore();
 
-  useEffect(() => {
-    updateCurrentCategory(items);
-  }, [items, updateCurrentCategory]);
+  const handleChange = ({ target: { value, name } }: ChangeEvent<HTMLInputElement>) => {
+    setValues((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleEmojiPick = ({ imageUrl }: EmojiClickData) => {
     setEmoji(imageUrl);
   };
 
-  const handleCreateItem = () => {
-    createItem({
-      id: uuidv4(),
-      name: item,
-      emoji,
-      quantity,
-      isPurchased: false,
-      category: currentCategory?.name || "",
-    });
+  const handleCreateCategory = () => {
+    createItem({ id: uuidv4(), ...values, isPurchased: false, emoji });
     handleClearState();
   };
 
   const handleClearState = () => {
-    setItem("");
+    setValues(DEFAULT_STATE);
     setEmoji("");
   };
-
-  console.log(currentCategory);
 
   const isEmoji = emoji && !!emoji.length;
 
   return (
     <BaseModal
-      title="Create item"
+      title="Create category"
       submitButtonLabel="Create"
-      onSubmit={handleCreateItem}
+      onSubmit={handleCreateCategory}
       modalTrigger={<AddButton />}
-      disableSubmitButton={!item.length}
+      // disableSubmitButton={!category.length}
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <Label htmlFor="item" className="text-base text-slate-800">
-            Item
+          <Label htmlFor="name" className="text-base text-slate-800">
+            Name
           </Label>
           <Input
-            id="item"
-            value={item}
-            placeholder="Item"
+            id="name"
+            name="name"
+            value={values.name}
+            placeholder="Name"
             className="placeholder:text-sm"
-            onChange={(e) => setItem(e.target.value)}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          <Label htmlFor="category" className="text-base text-slate-800">
+            Category
+          </Label>
+          <Input
+            id="category"
+            name="category"
+            value={values.category}
+            placeholder="Category"
+            className="placeholder:text-sm"
+            onChange={handleChange}
           />
         </div>
         <div className="flex items-center gap-4">
@@ -72,10 +80,12 @@ export default function CreateItemModal() {
           </Label>
           <Input
             id="quantity"
-            value={quantity}
+            name="quantity"
+            value={values.quantity}
             placeholder="Quantity"
             className="placeholder:text-sm"
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={handleChange}
+            inputMode="numeric"
           />
         </div>
         <div className="flex items-center gap-4">

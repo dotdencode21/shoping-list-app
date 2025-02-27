@@ -1,17 +1,19 @@
 import { delay } from "@/lib/utils";
-import { Item } from "@/types/item";
+import { ShoppingListItem } from "@/types/shopping-list";
 import { BaseStoreState } from "@/types/store";
 import { create } from "zustand";
 
-interface ItemStore extends BaseStoreState {
-  items: Item[];
+const SHOPPING_LIST_ITEMS_KEY = "shoppingListItem";
 
-  createItem: (payload: Item) => void;
-  editItemById: (itemId: string, payload: Partial<Item>) => void;
+interface ShoppingListStore extends BaseStoreState {
+  items: ShoppingListItem[];
+
+  createItem: (payload: ShoppingListItem) => void;
+  updateItemById: (itemId: string, payload: Partial<ShoppingListItem>) => void;
   removeItemById: (itemId: string) => void;
 }
 
-export const useItemStore = create<ItemStore>()((set, get) => ({
+export const useShoppingListStore = create<ShoppingListStore>()((set, get) => ({
   items: [],
   isLoading: false,
 
@@ -21,24 +23,33 @@ export const useItemStore = create<ItemStore>()((set, get) => ({
     set({ isLoading: false });
   },
 
+  saveToLocalStorage() {
+    const items = get().items;
+    localStorage.setItem(SHOPPING_LIST_ITEMS_KEY, JSON.stringify(items));
+  },
+
   createItem(payload) {
     try {
       get().triggerLoading();
 
       const items = [...get().items, payload];
       set({ items });
+
+      get().saveToLocalStorage?.();
     } catch (e) {
       console.error(e);
       throw e;
     }
   },
 
-  editItemById(itemId, payload) {
+  updateItemById(itemId, payload) {
     try {
       get().triggerLoading();
 
       const items = get().items.map((item) => (item.id === itemId ? { ...item, ...payload } : item));
       set({ items });
+
+      get().saveToLocalStorage?.();
     } catch (e) {
       console.error(e);
       throw e;
@@ -51,6 +62,8 @@ export const useItemStore = create<ItemStore>()((set, get) => ({
 
       const items = get().items.filter((item) => item.id !== itemId);
       set({ items });
+
+      get().saveToLocalStorage?.();
     } catch (e) {
       console.error(e);
       throw e;
