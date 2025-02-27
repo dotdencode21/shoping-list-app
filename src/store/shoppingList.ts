@@ -14,7 +14,7 @@ interface ShoppingListStore extends BaseStoreState {
 }
 
 export const useShoppingListStore = create<ShoppingListStore>()((set, get) => ({
-  items: [],
+  items: JSON.parse(localStorage.getItem(SHOPPING_LIST_ITEMS_KEY) || "[]"),
   isLoading: false,
 
   async triggerLoading() {

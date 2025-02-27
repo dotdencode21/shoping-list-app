@@ -10,7 +10,7 @@ import { useShoppingListStore } from "@/store/shoppingList";
 const DEFAULT_STATE = {
   name: "",
   category: "",
-  quantity: 0,
+  quantity: "",
 };
 
 export default function CreateModal() {
@@ -20,7 +20,18 @@ export default function CreateModal() {
   const { createItem } = useShoppingListStore();
 
   const handleChange = ({ target: { value, name } }: ChangeEvent<HTMLInputElement>) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
+    const isQuantityField = name === "quantity";
+    const pattern = /^\d*$/;
+
+    let validatedQuantity = values.quantity;
+
+    if (isQuantityField) {
+      if (pattern.test(value)) {
+        validatedQuantity = value;
+      }
+    }
+
+    setValues((prev) => ({ ...prev, [name]: isQuantityField ? validatedQuantity : value }));
   };
 
   const handleEmojiPick = ({ imageUrl }: EmojiClickData) => {
@@ -38,6 +49,7 @@ export default function CreateModal() {
   };
 
   const isEmoji = emoji && !!emoji.length;
+  const disableSubmitButton = !Object.values(values).every((item) => !!item.length);
 
   return (
     <BaseModal
@@ -45,10 +57,10 @@ export default function CreateModal() {
       submitButtonLabel="Create"
       onSubmit={handleCreateCategory}
       modalTrigger={<AddButton />}
-      // disableSubmitButton={!category.length}
+      disableSubmitButton={disableSubmitButton}
     >
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
+        <div className="grid grid-cols-[100px_1fr] items-center gap-4">
           <Label htmlFor="name" className="text-base text-slate-800">
             Name
           </Label>
@@ -61,7 +73,7 @@ export default function CreateModal() {
             onChange={handleChange}
           />
         </div>
-        <div className="flex items-center gap-4">
+        <div className="grid grid-cols-[100px_1fr] items-center gap-4">
           <Label htmlFor="category" className="text-base text-slate-800">
             Category
           </Label>
@@ -74,7 +86,7 @@ export default function CreateModal() {
             onChange={handleChange}
           />
         </div>
-        <div className="flex items-center gap-4">
+        <div className="grid grid-cols-[100px_1fr] items-center gap-4">
           <Label htmlFor="quantity" className="text-base text-slate-800">
             Quantity
           </Label>

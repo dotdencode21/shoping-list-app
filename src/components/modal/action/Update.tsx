@@ -3,7 +3,7 @@ import BaseModal from "../BaseModal";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { AddButton } from "@/components/button";
+import { EditButton } from "@/components/button";
 import { useShoppingListStore } from "@/store/shoppingList";
 import { ShoppingListItem } from "@/types/shopping-list";
 
@@ -14,18 +14,28 @@ interface UpdateModalProps {
 export default function UpdateModal({ data }: UpdateModalProps) {
   const { id: itemId, name, category, quantity, emoji: itemEmoji } = data;
 
-  
   const [values, setValues] = useState({
     name,
     category,
     quantity,
   });
   const [emoji, setEmoji] = useState(itemEmoji);
-  
+
   const { updateItemById } = useShoppingListStore();
 
   const handleChange = ({ target: { value, name } }: ChangeEvent<HTMLInputElement>) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
+    const isQuantityField = name === "quantity";
+    const pattern = /^\d*$/;
+
+    let validatedQuantity = values.quantity;
+
+    if (isQuantityField) {
+      if (pattern.test(value)) {
+        validatedQuantity = value;
+      }
+    }
+
+    setValues((prev) => ({ ...prev, [name]: isQuantityField ? validatedQuantity : value }));
   };
 
   const handleEmojiPick = ({ imageUrl }: EmojiClickData) => {
@@ -37,17 +47,18 @@ export default function UpdateModal({ data }: UpdateModalProps) {
   };
 
   const isEmoji = emoji && !!emoji.length;
+  const disableSubmitButton = !Object.values(values).every((item) => !!item.length);
 
   return (
     <BaseModal
       title="Create category"
       submitButtonLabel="Create"
       onSubmit={handleCreateCategory}
-      modalTrigger={<AddButton />}
-      // disableSubmitButton={!category.length}
+      modalTrigger={<EditButton title="Update" />}
+      disableSubmitButton={disableSubmitButton}
     >
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
+        <div className="grid grid-cols-[100px_1fr] items-center gap-4">
           <Label htmlFor="name" className="text-base text-slate-800">
             Name
           </Label>
@@ -60,7 +71,7 @@ export default function UpdateModal({ data }: UpdateModalProps) {
             onChange={handleChange}
           />
         </div>
-        <div className="flex items-center gap-4">
+        <div className="grid grid-cols-[100px_1fr] items-center gap-4">
           <Label htmlFor="category" className="text-base text-slate-800">
             Category
           </Label>
@@ -73,7 +84,7 @@ export default function UpdateModal({ data }: UpdateModalProps) {
             onChange={handleChange}
           />
         </div>
-        <div className="flex items-center gap-4">
+        <div className="grid grid-cols-[100px_1fr] items-center gap-4">
           <Label htmlFor="quantity" className="text-base text-slate-800">
             Quantity
           </Label>

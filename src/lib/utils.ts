@@ -10,3 +10,8 @@ export function delay(ms = 2000) {
     setTimeout(resolve, ms);
   });
 }
+
+export function capitalize(value: string) {
+  if (!value) return "";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
