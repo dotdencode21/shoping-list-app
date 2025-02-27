@@ -17,7 +17,7 @@ export default function CategoryPage() {
       />
       <SearchInput
         value={search}
-        placeholder="e.g., Fruits, Dairy, Vegetables"
+        placeholder="Search for categories"
         onChange={(e) => setSearch(e.target.value.trim().toLowerCase())}
       />
       <CategoryPageContent search={search} />

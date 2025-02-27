@@ -10,10 +10,10 @@ interface RemoveCategoryModalProps {
 export default function RemoveCategoryModal({ data }: RemoveCategoryModalProps) {
   const { id: categoryId, name } = data;
 
-  const { removeCategory } = useCategoryStore();
+  const { removeCategoryById } = useCategoryStore();
 
   const handleRemoveCategory = () => {
-    removeCategory(categoryId);
+    removeCategoryById(categoryId);
   };
 
   return (

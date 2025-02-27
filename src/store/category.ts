@@ -1,24 +1,30 @@
 import { delay } from "@/lib/utils";
 import { Category } from "@/types/category";
+import { Item } from "@/types/item";
 import { BaseStoreState } from "@/types/store";
 import { create } from "zustand";
 
 const CATEGORY_KEY = "categories";
+const CURRENT_CATEGORY_KEY = "currentCategory";
 
 interface CategoryStore extends BaseStoreState {
   categories: Category[];
+  currentCategory: Category | null;
 
-  addCategory: (payload: Category) => void;
-  editCategory: (categoryId: string, payload: Partial<Category>) => void;
-  removeCategory: (categoryId: string) => void;
+  getCategoryById: (categoryId: string) => void;
+  createCategory: (payload: Category) => void;
+  editCategoryById: (categoryId: string, payload: Partial<Category>) => void;
+  removeCategoryById: (categoryId: string) => void;
+  updateCurrentCategory: (payload: Item[]) => void;
 }
 
 export const useCategoryStore = create<CategoryStore>()((set, get) => ({
   categories: JSON.parse(localStorage.getItem(CATEGORY_KEY) || "[]"),
+  currentCategory: JSON.parse(localStorage.getItem(CURRENT_CATEGORY_KEY) || "null"),
   isLoading: false,
 
-  saveToLocalStorage() {
-    localStorage.setItem(CATEGORY_KEY, JSON.stringify(get().categories));
+  saveToLocalStorage(key = CATEGORY_KEY, value = get().categories) {
+    localStorage.setItem(key, JSON.stringify(value));
   },
 
   async triggerLoading() {
@@ -27,43 +33,80 @@ export const useCategoryStore = create<CategoryStore>()((set, get) => ({
     set({ isLoading: false });
   },
 
-  addCategory(payload) {
+  getCategoryById(categoryId) {
     try {
-      get().triggerLoading();
+      const foundCategory = get().categories.find((category) => category.id === categoryId) as Category;
+      const currentCategory = { ...foundCategory, items: [] };
+      set({ currentCategory });
 
-      set({ categories: [...get().categories, payload] });
-
-      get().saveToLocalStorage();
+      get().saveToLocalStorage?.(CURRENT_CATEGORY_KEY, get().currentCategory);
     } catch (e) {
       console.error(e);
       throw e;
     }
   },
 
-  editCategory(categoryId, payload) {
+  createCategory(payload) {
     try {
       get().triggerLoading();
+
+      const categories = [...get().categories, payload];
+      set({ categories });
+
+      get().saveToLocalStorage?.();
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
+
+  editCategoryById(categoryId, payload) {
+    try {
+      get().triggerLoading();
+
+      const categories = get().categories.map((category) =>
+        category.id === categoryId ? { ...category, ...payload } : category,
+      );
+      set({ categories });
+
+      get().saveToLocalStorage?.();
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
+
+  removeCategoryById(categoryId) {
+    try {
+      get().triggerLoading();
+
+      const categories = get().categories.filter((category) => category.id !== categoryId);
+      set({ categories });
+
+      get().saveToLocalStorage?.();
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  },
+
+  updateCurrentCategory(payload) {
+    try {
+      const currentCategory = get().currentCategory;
+      if (!currentCategory) {
+        throw new Error("Current category is not properly initialized");
+      }
+
+      const items = [...(currentCategory.items as Item[]), ...payload];
 
       set({
-        categories: get().categories.map((category) =>
-          category.id === categoryId ? { ...category, ...payload } : category,
-        ),
+        currentCategory: {
+          ...currentCategory,
+          items,
+        },
       });
 
-      get().saveToLocalStorage();
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  },
-
-  removeCategory(categoryId) {
-    try {
-      get().triggerLoading();
-
-      set({ categories: get().categories.filter((category) => category.id !== categoryId) });
-
-      get().saveToLocalStorage();
+      get().saveToLocalStorage?.(CURRENT_CATEGORY_KEY, get().currentCategory);
     } catch (e) {
       console.error(e);
       throw e;

@@ -17,7 +17,7 @@ export default function EditCategoryModal({ data }: EditCategoryModalProps) {
   const [category, setCategory] = useState(name);
   const [emoji, setEmoji] = useState(categoryEmoji);
 
-  const { editCategory } = useCategoryStore();
+  const { editCategoryById } = useCategoryStore();
 
   const handleEmojiPick = ({ imageUrl }: EmojiClickData) => {
     setEmoji(imageUrl);
@@ -26,7 +26,7 @@ export default function EditCategoryModal({ data }: EditCategoryModalProps) {
   const handleRemoveEmoji = () => setEmoji("");
 
   const handleUpdateCategory = () => {
-    editCategory(categoryId, { ...data, name: category, emoji });
+    editCategoryById(categoryId, { ...data, name: category, emoji });
   };
 
   const isEmoji = emoji && !!emoji.length;

@@ -12,7 +12,7 @@ interface CategoryCardProps {
 }
 
 export default function CategoryCard({ category }: CategoryCardProps) {
-  const { name, items, emoji } = category;
+  const { id, name, items, emoji } = category;
 
   const isEmoji = emoji && !!emoji.length;
 
@@ -34,7 +34,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
       </CardHeader>
       <CardContent className="flex items-center justify-between">
         {isEmoji ? <img src={emoji} className="size-8" /> : <Ban className="size-8 text-slate-700" />}
-        <Link to={`${category.name}`} className="rounded-sm bg-purple-600/15 p-1">
+        <Link to={`${category.name}`} state={{ categoryId: id }} className="rounded-sm bg-purple-600/15 p-1">
           <ArrowRight className="text-slate-700" />
         </Link>
       </CardContent>
