@@ -1,50 +1,78 @@
-# React + TypeScript + Vite
+## Getting started
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Recommended version of Node: 20.12.2
 
-Currently, two official plugins are available:
+## Launch the application
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Clone the repo:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+git clone https://github.com/dotdencode21/shopping-list-app.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Move to project folder:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+cd shopping-list-app
 ```
+
+3. Install dependecies:
+
+```bash
+npm install
+# or
+yarn
+# or
+pnpm install
+# or
+bun install
+```
+
+4. Run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+## Result
+
+Open [http://localhost:4000](http://localhost:4000) with your browser to see the result
+
+## Project structure
+
+#### components
+
+- /button - button components
+- /card - card components
+- /common - common componnets (Dropdown, SearchInput, etc.)
+- /layout - layut components
+- /modal - modal components
+- /ui - components initialized by [shadcn/ui](https://ui.shadcn.com/)
+
+#### lib
+
+- utils.ts - helpers functions
+
+#### pages
+
+- /error - error pages (Not found, Fallback, etc.)
+- /public - public pages
+
+#### store
+
+- shoppingList.ts - store for the application created by using [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction)
+
+#### types
+
+- TypeScript types for the application
+
+## What else could be added?
+
+- Implement unit tests (Jest + React Testing Library) for critical components and logic
+- Undo the last action (within the same session).
